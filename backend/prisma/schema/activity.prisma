@@ -1,0 +1,33 @@
+/// Lead timeline and the dashboard's "AI activity" feed.
+model ActivityLog {
+  id        String    @id @default(cuid())
+  leadId    String?
+  actorType ActorType
+  type      String
+  title     String
+  detail    String?
+  payload   Json?
+  createdAt DateTime  @default(now())
+
+  lead Lead? @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+  @@index([createdAt])
+}
+
+/// One row per LLM request: model, prompt version, tokens and latency.
+model AiCallLog {
+  id            String   @id @default(cuid())
+  task          String
+  provider      String
+  model         String
+  promptVersion String
+  inputTokens   Int?
+  outputTokens  Int?
+  latencyMs     Int
+  success       Boolean
+  error         String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  @@index([task, createdAt])
+}

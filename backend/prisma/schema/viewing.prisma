@@ -1,0 +1,19 @@
+model Viewing {
+  id          String        @id @default(cuid())
+  leadId      String
+  propertyId  String
+  agentId     String?
+  scheduledAt DateTime
+  status      ViewingStatus @default(SCHEDULED)
+  bookedBy    ActorType     @default(AI)
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lead     Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  agent    User?    @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  proposals Proposal[]
+
+  @@index([scheduledAt])
+}

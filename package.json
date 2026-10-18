@@ -1,0 +1,14 @@
+{
+  "name": "leadstrellis-ai",
+  "private": true,
+  "scripts": {
+    "frontend": "npm --prefix frontend run dev",
+    "frontend:install": "npm --prefix frontend install",
+    "frontend:build": "npm --prefix frontend run build",
+    "backend": "npm --prefix backend run dev",
+    "backend:install": "npm --prefix backend install",
+    "backend:build": "npm --prefix backend run build",
+    "backend:setup": "npm --prefix backend run db:deploy && npm --prefix backend run db:seed",
+    "backend:test": "npm --prefix backend test"
+  }
+}

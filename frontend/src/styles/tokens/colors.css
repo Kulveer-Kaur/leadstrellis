@@ -1,0 +1,33 @@
+/* Palette sampled from theme.png. Light theme only. */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-primary: #1b3725;
+  --color-primary-hover: #24472f;
+  --color-primary-soft: #e3e9e4;
+  --color-on-primary: #f7f5f0;
+
+  --color-canvas: #efebe4; /* page behind the app frame */
+  --color-frame: #f8f6f2; /* app frame, sidebar, top bar */
+  --color-surface: #fdfcfa; /* cards */
+  --color-surface-2: #f3efe8; /* inner panels, stat strips */
+  --color-track: #eae4da; /* inactive bars, ring track */
+  --color-border: #ebe6de;
+  --color-border-strong: #ddd6cb;
+
+  --color-heading: #1c1f1d;
+  --color-text: #2e332f;
+  --color-muted: #6b6a63; /* 5.3:1 on surface */
+
+  --color-success: #2f6b45;
+  --color-success-soft: #e2ece5;
+  --color-warning: #8a6420; /* text-safe amber, 5.1:1 on soft */
+  --color-warning-soft: #f4ead6;
+  --color-danger: #a6422f;
+  --color-danger-soft: #f5e3df;
+  --color-info: #3d6a7a;
+  --color-info-soft: #e1eaed;
+}

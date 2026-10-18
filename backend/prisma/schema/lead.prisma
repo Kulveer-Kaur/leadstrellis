@@ -1,0 +1,108 @@
+model Lead {
+  id               String          @id @default(cuid())
+  number           Int             @unique @default(autoincrement())
+  fullName         String
+  phone            String?
+  email            String?
+  instagramHandle  String?
+  source           LeadSource
+  campaign         String?
+  rawMessage       String?         @db.Text
+  status           LeadStatus      @default(NEW)
+  intentLevel      IntentLevel?
+  score            Int?
+  winProbability   Float?
+  winReasons       String[]
+  preferredChannel Channel?
+  language         String          @default("en")
+  processingState  ProcessingState @default(PENDING)
+  processingError  String?
+  contactAttempts  Int             @default(0)
+  lastContactedAt  DateTime?
+  lastInboundAt    DateTime?
+  automationPaused Boolean         @default(false)
+  /// Who works this lead: nobody (OFF), the free rule-based engine (RULES) or the AI agent (AI).
+  /// Only AI spends tokens; OFF and RULES leads are read, scored and matched by rules.
+  agentMode        AgentMode       @default(OFF)
+  /// True while the lead's route (match → propose → read replies → close) is running.
+  aiRouteEnabled   Boolean         @default(false)
+  aiRouteStep      AiRouteStep     @default(OFF)
+  /// Latest plain-language status of the AI route, e.g. why it is waiting.
+  aiRouteNote      String?
+  aiRouteStartedAt DateTime?
+  unsubscribedAt   DateTime?
+  dealValueAed     Int?
+  wonPropertyId    String?
+  wonAt            DateTime?
+  lostReason       String?
+  assignedToId     String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  assignedTo  User?               @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  wonProperty Property?           @relation("WonProperty", fields: [wonPropertyId], references: [id], onDelete: SetNull)
+  requirement LeadRequirement?
+  scores      LeadScore[]
+  matches     LeadPropertyMatch[]
+  messages    Message[]
+  calls       Call[]
+  viewings    Viewing[]
+  tasks       Task[]
+  activities  ActivityLog[]
+  runs        AutomationRun[]
+  agentTasks  AgentTask[]
+  proposals   Proposal[]
+
+  @@index([status])
+  @@index([score])
+  @@index([phone])
+  @@index([email])
+  @@index([instagramHandle])
+  @@index([createdAt])
+  @@index([winProbability])
+  @@index([aiRouteEnabled, aiRouteStep])
+}
+
+/// What the lead is looking for. Extracted by AI from free text, editable by agents.
+model LeadRequirement {
+  id                   String            @id @default(cuid())
+  leadId               String            @unique
+  purpose              LeadPurpose?
+  propertyTypes        PropertyType[]
+  bedroomsMin          Int?
+  bedroomsMax          Int?
+  /// AED. For rentals this is the yearly amount.
+  budgetMin            Int?
+  budgetMax            Int?
+  currency             String            @default("AED")
+  emirate              String?
+  communities          String[]
+  timeline             Timeline          @default(UNKNOWN)
+  financing            Financing         @default(UNKNOWN)
+  completionPreference CompletionStatus?
+  mustHaves            String[]
+  niceToHaves          String[]
+  summary              String?           @db.Text
+  confidence           Float             @default(0)
+  missingFields        String[]
+  extractedBy          ExtractedBy       @default(AI)
+  updatedAt            DateTime          @updatedAt
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+/// Score history: every (re)score is kept so the number can always be explained.
+model LeadScore {
+  id            String      @id @default(cuid())
+  leadId        String
+  total         Int
+  intentLevel   IntentLevel
+  breakdown     Json
+  aiIntentScore Int
+  reasoning     String      @db.Text
+  createdAt     DateTime    @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+}

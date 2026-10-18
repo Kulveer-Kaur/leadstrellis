@@ -1,0 +1,36 @@
+model Property {
+  id               String           @id @default(cuid())
+  refCode          String           @unique
+  title            String
+  description      String           @db.Text
+  type             PropertyType
+  listingType      ListingType
+  /// AED. Sale price, or yearly rent for RENT listings.
+  priceAed         Int
+  bedrooms         Int
+  bathrooms        Int
+  areaSqft         Int
+  emirate          String
+  community        String
+  building         String?
+  lat              Float
+  lng              Float
+  developer        String?
+  completionStatus CompletionStatus @default(READY)
+  handoverDate     DateTime?
+  furnished        Boolean          @default(false)
+  view             String?
+  amenities        String[]
+  imageUrls        String[]
+  status           PropertyStatus   @default(AVAILABLE)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  matches  LeadPropertyMatch[]
+  viewings Viewing[]
+  wonLeads Lead[]              @relation("WonProperty")
+  proposals Proposal[]
+
+  @@index([emirate, community, type, priceAed, bedrooms])
+  @@index([status, listingType])
+}

@@ -1,0 +1,61 @@
+/// Queue for the Phase-2 AI agents. The runner claims a PENDING task, loads the lead
+/// context, calls the agent's logic (AI or rule-based), and writes the result back as
+/// an activity + any side-effects (emails, stage changes, new tasks).
+model AgentTask {
+  id        String          @id @default(cuid())
+  agent     AgentType
+  type      String
+  leadId    String?
+  runAfter  DateTime        @default(now())
+  status    AgentTaskStatus @default(PENDING)
+  attempts  Int             @default(0)
+  maxAttempts Int           @default(3)
+  payload   Json?
+  result    Json?
+  error     String?
+  startedAt DateTime?
+  finishedAt DateTime?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  lead Lead? @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([status, runAfter])
+  @@index([agent, status])
+  @@index([leadId, createdAt])
+}
+
+/// One row per AgentType. Admin can switch each agent on or off, and the row keeps
+/// a lightweight counter of what the agent did today so the UI can show it quickly.
+model AgentSetting {
+  id             String    @id @default(cuid())
+  agent          AgentType @unique
+  isActive       Boolean   @default(true)
+  lastRunAt      DateTime?
+  tasksDoneToday Int       @default(0)
+  statsResetAt   DateTime  @default(now())
+  config         Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+/// Single-row key/value store for app-wide switches: pilot toggle, live-feed toggle,
+/// working hours, AI daily budget, email caps. The service reads it once per minute.
+model AppSetting {
+  id        String   @id @default("global")
+  pilotEnabled           Boolean  @default(false)
+  liveFeedEnabled        Boolean  @default(false)
+  workingDays            Int[]    @default([1, 2, 3, 4, 5, 6])
+  workingHoursStart      Int      @default(9)
+  workingHoursEnd        Int      @default(19)
+  timezone               String   @default("Asia/Dubai")
+  aiDailyTokenBudget     Int      @default(180000)
+  aiTokensUsedToday      Int      @default(0)
+  aiBudgetResetAt        DateTime @default(now())
+  emailsPerLeadPerDay    Int      @default(1)
+  emailsPerLeadPerWeek   Int      @default(4)
+  dailySendCap           Int      @default(150)
+  dailySendCount         Int      @default(0)
+  dailySendResetAt       DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}

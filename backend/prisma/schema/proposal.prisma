@@ -1,0 +1,36 @@
+/// AI-written proposal for a lead's best-matching property. The PDF is rendered on
+/// demand from these fields, so what the lead sees always matches the stored record.
+model Proposal {
+  id           String         @id @default(cuid())
+  leadId       String
+  propertyId   String
+  /// Unguessable token for the public proposal page and PDF link.
+  token        String         @unique
+  status       ProposalStatus @default(SENT)
+  fitScore     Int?
+  headline     String
+  intro        String         @db.Text
+  whyItFits    String[]
+  nextSteps    String[]
+  /// Site-visit slots offered to the lead (UTC).
+  slots        DateTime[]
+  /// Other matched properties: [{ propertyId, refCode, title, community, priceAed, fitScore, reason }].
+  alternatives Json
+  aiGenerated  Boolean        @default(false)
+  /// SMTP Message-ID of the proposal email, used to thread replies.
+  emailMessageId String?
+  error        String?
+  sentAt       DateTime?
+  viewedAt     DateTime?
+  respondedAt  DateTime?
+  viewingId    String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  lead     Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  viewing  Viewing? @relation(fields: [viewingId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([emailMessageId])
+}

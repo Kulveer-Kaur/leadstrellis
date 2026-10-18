@@ -1,0 +1,12 @@
+@import 'leaflet/dist/leaflet.css';
+
+/* Warm the map tiles towards the cream palette. */
+.ep-map .leaflet-tile-pane {
+  filter: sepia(0.35) saturate(0.8) brightness(1.03);
+}
+.ep-map .leaflet-control-attribution {
+  @apply bg-surface/80 text-label-small text-muted;
+}
+.ep-map .leaflet-control-zoom {
+  @apply hidden;
+}

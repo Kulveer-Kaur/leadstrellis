@@ -1,0 +1,36 @@
+model Call {
+  id               String       @id @default(cuid())
+  leadId           String
+  mode             CallMode
+  status           CallStatus   @default(QUEUED)
+  toNumber         String?
+  providerCallSid  String?      @unique
+  startedAt        DateTime?
+  endedAt          DateTime?
+  durationSec      Int?
+  outcome          CallOutcome?
+  summary          String?      @db.Text
+  /// Requirement changes, viewing and follow-up details from the call summary.
+  extractedUpdates Json?
+  silentTurns      Int          @default(0)
+  finalizedAt      DateTime?
+  createdAt        DateTime     @default(now())
+
+  lead  Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  turns CallTranscriptTurn[]
+
+  @@index([leadId, createdAt])
+}
+
+model CallTranscriptTurn {
+  id        String   @id @default(cuid())
+  callId    String
+  speaker   Speaker
+  text      String   @db.Text
+  order     Int
+  createdAt DateTime @default(now())
+
+  call Call @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@unique([callId, order])
+}

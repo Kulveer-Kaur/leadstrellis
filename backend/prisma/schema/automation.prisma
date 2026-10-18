@@ -1,0 +1,29 @@
+/// Automation rules are implemented in code (src/automation/rules); this table
+/// stores their on/off switch and settings so admins can toggle them.
+model AutomationRule {
+  id          String          @id @default(cuid())
+  key         String          @unique
+  name        String
+  description String
+  trigger     String
+  isActive    Boolean         @default(true)
+  config      Json?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  runs AutomationRun[]
+}
+
+model AutomationRun {
+  id        String    @id @default(cuid())
+  ruleId    String
+  leadId    String?
+  status    RunStatus
+  log       String    @db.Text
+  createdAt DateTime  @default(now())
+
+  rule AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  lead Lead?          @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId, createdAt])
+}

@@ -1,0 +1,21 @@
+model LeadPropertyMatch {
+  id          String    @id @default(cuid())
+  leadId      String
+  propertyId  String
+  /// 0–100 rule-based fit before AI re-ranking.
+  filterScore Float
+  /// 1 = best. Null when the property was a candidate but not in the final top list.
+  finalRank   Int?
+  aiFitScore  Int?
+  aiReason    String?   @db.Text
+  caveat      String?
+  sentAt      DateTime?
+  feedback    String?
+  createdAt   DateTime  @default(now())
+
+  lead     Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([leadId, propertyId])
+  @@index([propertyId])
+}

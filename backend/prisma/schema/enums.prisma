@@ -1,0 +1,221 @@
+enum Role {
+  ADMIN
+  AGENT
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONTACTED
+  ENGAGED
+  VIEWING
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+  NURTURE
+}
+
+enum LeadSource {
+  WEBSITE
+  WHATSAPP
+  INSTAGRAM
+  EMAIL
+  MANUAL
+  ADS
+  PHONE
+  GOOGLE_BUSINESS
+  FACEBOOK
+  PROPERTY_PORTAL
+  REFERRAL
+}
+
+enum IntentLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum ProcessingState {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+}
+
+enum Channel {
+  EMAIL
+  WHATSAPP
+  INSTAGRAM
+  SMS
+  CALL
+}
+
+enum LeadPurpose {
+  BUY
+  RENT
+  INVEST
+}
+
+enum Timeline {
+  IMMEDIATE
+  ONE_TO_THREE_MONTHS
+  THREE_TO_SIX_MONTHS
+  SIX_MONTHS_PLUS
+  UNKNOWN
+}
+
+enum Financing {
+  CASH
+  MORTGAGE
+  UNKNOWN
+}
+
+enum ExtractedBy {
+  AI
+  RULES
+  MANUAL
+}
+
+enum PropertyType {
+  APARTMENT
+  VILLA
+  TOWNHOUSE
+  PENTHOUSE
+  STUDIO
+  PLOT
+  OFFICE
+}
+
+enum ListingType {
+  SALE
+  RENT
+}
+
+enum CompletionStatus {
+  READY
+  OFF_PLAN
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum MessageDirection {
+  OUT
+  IN
+}
+
+enum MessageStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  REPLIED
+  RECEIVED
+}
+
+enum CallMode {
+  TWILIO
+  SIMULATED
+}
+
+enum CallStatus {
+  QUEUED
+  RINGING
+  IN_PROGRESS
+  COMPLETED
+  NO_ANSWER
+  FAILED
+}
+
+enum CallOutcome {
+  INTERESTED
+  NOT_READY
+  NOT_INTERESTED
+  NO_ANSWER
+}
+
+enum Speaker {
+  AI
+  LEAD
+}
+
+enum ViewingStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum TaskType {
+  FOLLOW_UP
+  NURTURE
+  CALLBACK
+}
+
+enum TaskStatus {
+  PENDING
+  DONE
+  CANCELLED
+}
+
+enum ActorType {
+  USER
+  AI
+  SYSTEM
+}
+
+enum RunStatus {
+  SUCCESS
+  SKIPPED
+  FAILED
+}
+
+/// The eight Phase-2 AI agents. Each has one job and its own on/off switch.
+enum AgentType {
+  INTAKE
+  QUALIFIER
+  MATCHMAKER
+  OUTREACH
+  INBOX
+  FOLLOW_UP
+  DEAL
+  PILOT
+}
+
+enum AgentTaskStatus {
+  PENDING
+  RUNNING
+  DONE
+  FAILED
+  SKIPPED
+}
+
+/// Where a lead is on its AI route (match → proposal → reply → won).
+enum AiRouteStep {
+  OFF
+  ANALYSING
+  MATCHING
+  PROPOSING
+  AWAITING_REPLY
+  WON
+  LOST
+  NEEDS_ATTENTION
+}
+
+enum ProposalStatus {
+  SENT
+  FAILED
+  ACCEPTED
+  DECLINED
+}
+
+/// Per-lead automation mode. Only AI uses LLM tokens.
+enum AgentMode {
+  OFF
+  RULES
+  AI
+}
